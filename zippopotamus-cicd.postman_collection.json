@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "131bdcde-202f-4bb8-8f5d-316099ac4a4f",
+		"name": "zippopotamus-cicd",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "598323"
+	},
+	"item": [
+		{
+			"name": "Get data for US zip code 12345",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check state is equal to New York\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData['places'][0]['state']).to.eql('New York');\r",
+							"});\r",
+							"\r",
+							"var payload = pm.response.json();\r",
+							"var stateAbbreviation = payload['places'][0]['state abbreviation'];\r",
+							"var placeName = payload['places'][0]['place name'];\r",
+							"\r",
+							"pm.variables.set('stateAbbreviation', stateAbbreviation);\r",
+							"pm.variables.set('placeName', placeName);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.zippopotam.us/us/12345",
+					"protocol": "http",
+					"host": [
+						"api",
+						"zippopotam",
+						"us"
+					],
+					"path": [
+						"us",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET data for extracted state and place name",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Check that there are 11 places in the list\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData['places'].length).to.eql(11);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check that all place names equal \" + pm.variables.get('placeName'), function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData['places'].every(val => val['place name'] === pm.variables.get('placeName') )).to.eql(true);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.zippopotam.us/us/{{stateAbbreviation}}/{{placeName}}",
+					"protocol": "http",
+					"host": [
+						"api",
+						"zippopotam",
+						"us"
+					],
+					"path": [
+						"us",
+						"{{stateAbbreviation}}",
+						"{{placeName}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
