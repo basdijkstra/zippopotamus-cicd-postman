@@ -92,6 +92,40 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "This is a completely separate request just for demo purposes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://api.zippopotam.us/us/55555",
+					"protocol": "http",
+					"host": [
+						"api",
+						"zippopotam",
+						"us"
+					],
+					"path": [
+						"us",
+						"55555"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
